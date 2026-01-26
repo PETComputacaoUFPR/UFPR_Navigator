@@ -1,0 +1,57 @@
+.card {
+  width: 100%;
+  height: 169px;
+
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  padding: 20px;
+  border-radius: 20px;
+
+  background: linear-gradient(163.98deg, #9ad1d4 7%, #007ea7 100%);
+}
+
+/* Imagem da pessoa */
+.avatar {
+  width: 130px;
+  height: 130px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+/* Área de texto */
+.info {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Nome e cargo */
+.text {
+  margin-top: 6px;
+}
+
+.name {
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+}
+
+.role {
+  font-size: 16px;
+  color: white;
+}
+
+/* Link inferior */
+.link {
+  margin-top: auto;
+  font-size: 16px;
+  color: white;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}

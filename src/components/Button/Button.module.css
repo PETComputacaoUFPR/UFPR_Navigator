@@ -1,0 +1,36 @@
+/* Estilo base compartilhado por todas as variações */
+.button {
+  padding: 12px 30px;
+  height: 60px;
+  width: 260px;
+
+  border: none;
+  border-radius: 30px;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+/* Variação principal (equivalente ao variant="primary" da V1) */
+.primary {
+  background: linear-gradient(104deg, #9ad1d4, #007ea7);
+  color: #ffffff;
+  margin-top: 95px;
+}
+
+.primary:hover {
+  background: linear-gradient(104deg, #8ac7ca, #006b94);
+}
+
+/* Variação secundária (equivalente ao variant="secondary" da V1) */
+.secondary {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.secondary:hover {
+  background-color: #eeeeee;
+}

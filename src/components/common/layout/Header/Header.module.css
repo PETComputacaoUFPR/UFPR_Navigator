@@ -1,0 +1,30 @@
+/* Container principal do Header */
+.header {
+  color: white;
+  padding: 16px 32px;
+
+  height: 150px;
+  margin: 50px 150px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Navegação */
+.nav {
+  display: flex;
+  gap: 24px;
+}
+
+/* Links de navegação */
+.link {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 18px;
+}
+
+.link:hover {
+  text-decoration: underline;
+}

@@ -21,6 +21,9 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"]
+    },
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,

@@ -20,5 +20,10 @@ module.exports = {
     rules: {
       "react/react-in-jsx-scope": "off",
     },
+    settings: {
+      "import/resolver": {
+        typescript: {}
+      }
+    },
   };
   
