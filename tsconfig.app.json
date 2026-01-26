@@ -1,22 +1,15 @@
 {
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    /* target, module e moduleResolution ajustados conforme chakra */
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-
+    "target": "ES2022",
     "useDefineForClassFields": true,
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
     "types": ["vite/client"],
     "skipLibCheck": true,
 
-    /* Paths para alias “@/*” */
-    "paths": {
-      "@/*": ["./src/*"]
-    },
-
     /* Bundler mode */
+    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
@@ -25,6 +18,9 @@
 
     /* Linting */
     "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "baseUrl": "./src",
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,

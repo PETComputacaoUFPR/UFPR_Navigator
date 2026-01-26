@@ -1,10 +1,36 @@
-# Localizador De Salas
+# UFPR Navigator
 
-## Versões a serem usadas
+Projeto desenvolvido em **React + TypeScript**, utilizando **Vite** como bundler.  
 
-* vite - v7.1.9
+---
 
-## Dependencias Instaladas
+## 📋 Pré-requisitos
 
-* Chakra for designs
-[Install: npm i @chakra-ui/react @emotion/react](https://chakra-ui.com/docs/get-started/frameworks/vite)
+Antes de iniciar, certifique-se de ter instalado:
+
+- **Node.js** (versão 18 ou superior)
+- **npm** (incluso com o Node.js)
+- **Git**
+
+Para verificar:
+```bash
+node -v
+npm -v
+git --version
+```
+
+## 📦 Clonando o projeto
+```bash
+git clone <URL_DO_REPOSITORIO>
+cd UFPR_Navigator
+```
+
+## 📥 Instalando dependências 
+```bash
+npm install
+```
+
+## ▶️ Rodando o projeto em ambiente de desenvolvimento
+```bash
+npm run dev
+```
