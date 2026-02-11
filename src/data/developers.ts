@@ -5,7 +5,7 @@ export interface Developer {
   name: string;
   role: string;
   website: string;
-  image?: string; // 👈 opcional
+  image?: string;
 }
 
 export const developers: Developer[] = [

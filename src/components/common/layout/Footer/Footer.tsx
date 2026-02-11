@@ -1,9 +1,4 @@
-// Componente de rodapé global da aplicação.
-// Responsável apenas pela exibição de informações institucionais
-// e links externos.
-
 import styles from "./Footer.module.css";
-
 import LocalizadorImg from "@/assets/localizador_img.png";
 import PetImg from "@/assets/pet_img.png";
 import { FaInstagram } from "react-icons/fa6";

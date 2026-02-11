@@ -1,6 +1,5 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, useMemo } from "react";
 import L from "leaflet";
-
 import styles from "./MapPage.module.css";
 import LeafletMap from "../../components/common/LeafletMap";
 import SearchBar, {
@@ -21,8 +20,25 @@ export default function MapPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isRoutePanelOpen, setIsRoutePanelOpen] = useState(false);
 
+  {/* Tempo estimado da rota atual (em minutos). Null quando não calculado. */}
+  const [routeMinutes, setRouteMinutes] = useState<number | null>(null);
+
   const mapRef = useRef<L.Map | null>(null);
   const resultLayerRef = useRef<L.LayerGroup | null>(null);
+
+
+  const MENU_WIDTH_OPEN = 300;
+  const MENU_WIDTH_CLOSED = 56;
+  const ROUTE_PANEL_GAP = 24;
+
+  const routePanelLeft = useMemo(() => {
+    const menuW = isMenuOpen ? MENU_WIDTH_OPEN : MENU_WIDTH_CLOSED;
+    return `calc(${menuW}px + ${ROUTE_PANEL_GAP}px)`;
+  }, [isMenuOpen]);
+
+  const pageStyle = useMemo(() => {
+    return { ["--route-panel-left" as any]: routePanelLeft };
+  }, [routePanelLeft]);
 
   /**
    * Callback quando o mapa estiver pronto.
@@ -92,28 +108,33 @@ export default function MapPage() {
   }
 
   /**
-   * Alterna o painel de rota (abre/fecha).
-   * Ao abrir, fecha o menu lateral.
-   *
-   * @returns {void}
+   * Nesta etapa: placeholder (implementar geolocalização).
    */
+  function handleSidebarMeuLocal(): void {
+    alert(
+      "implementar a geolocalização para centralizar no seu local."
+    );
+  }
+
+  function handleSidebarDestino(termRaw: string): void {
+    const sala = findSala(termRaw);
+    if (!sala) {
+      alert("Sala não encontrada. Tente algo como: PA-05");
+      return;
+    }
+    alert(
+      `Destino selecionado: ${sala.n_sala}. Próximo passo: desenhar rota e tempo.`
+    );
+    setRouteMinutes(null);
+  }
 
   function toggleRoutePanel(): void {
-    setIsRoutePanelOpen((v) => {
-      const next = !v;
-      // quando abre o painel de rota, deixamos o menu no modo “faixa”
-      if (next) setIsMenuOpen(false);
-
-      window.setTimeout(() => {
-        mapRef.current?.invalidateSize();
-      }, 250);
-
-      return next;
-    });
+    setIsRoutePanelOpen((v) => !v);
+    window.setTimeout(() => mapRef.current?.invalidateSize(), 250);
   }
 
   return (
-    <div className={styles.pageContainer}>
+    <div className={styles.pageContainer} style={pageStyle}>
       <LeafletMap
         className={styles.mapContainer}
         center={[-25.450223, -49.233239]}
@@ -133,19 +154,26 @@ export default function MapPage() {
         }}
       />
 
-      {/* Painel de rota (2ª imagem) */}
-      <RoutePanel isOpen={isRoutePanelOpen} />
+      {/* Painel de rota */}
+      <RoutePanel
+        isOpen={isRoutePanelOpen}
+        routeMinutes={routeMinutes}
+        onMeuLocalSearch={handleSidebarMeuLocal}
+        onDestinoSearch={handleSidebarDestino}
+      />
 
-      {/* Barra de pesquisa topo */}
-      <div className={styles.topSearchOverlay}>
-        <SearchBar
-          placeholder="Pesquisar (ex: PA-05)"
-          onSearch={handleSearch}
-          getSuggestions={getTopSuggestions}
-          showRouteIcon
-          onRouteClick={toggleRoutePanel}
-        />
-      </div>
+      {/* Barra de pesquisa topo (some quando o RoutePanel estiver aberto) */}
+      {!isRoutePanelOpen && (
+        <div className={styles.topSearchOverlay}>
+          <SearchBar
+            placeholder="Pesquisar (ex: PA-05)"
+            onSearch={handleSearch}
+            getSuggestions={getTopSuggestions}
+            showRouteIcon
+            onRouteClick={toggleRoutePanel}
+          />
+        </div>
+      )}
     </div>
   );
 }

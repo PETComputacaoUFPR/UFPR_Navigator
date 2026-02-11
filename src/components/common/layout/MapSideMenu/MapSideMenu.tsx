@@ -1,7 +1,6 @@
 import { HashLink } from "react-router-hash-link";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoClose } from "react-icons/io5";
-
 import styles from "./MapSideMenu.module.css";
 import LocalizadorImg from "@/assets/localizador_img.png";
 import PetImg from "@/assets/pet_img.png";
@@ -20,10 +19,6 @@ export interface MapSideMenuProps {
    */
   onToggle: () => void;
 
-  /**
-   * Opcional: controla se exibe o rodapé com marca/parceiro.
-   * Útil caso você queira esconder em telas menores.
-   */
   showFooterLogo?: boolean;
 }
 

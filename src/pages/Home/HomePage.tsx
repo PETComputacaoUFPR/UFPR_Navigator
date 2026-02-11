@@ -1,7 +1,3 @@
-// Página responsável apenas por montar a Home.
-// Nenhuma regra de negócio deve viver aqui.
-// Estrutura semântica adicionada sem alterar o layout visual.
-
 import styles from "./HomePage.module.css";
 
 import Header from "@/components/common/layout/Header/Header";
@@ -16,7 +12,7 @@ import displayImg from "@/assets/display_img.png";
 function HomePage() {
   return (
     <div className={styles.container}>
-      {/* ===== HERO / INÍCIO ===== */}
+      {/* ===== INÍCIO ===== */}
       <section id="begin" className={styles.begin}>
         <Header />
 

@@ -12,7 +12,6 @@ interface LeafletMapProps {
   className?: string;
   /**
    * Callback chamado quando o mapa estiver pronto.
-   * Use para criar layers, markers e controles fora do componente.
    */
   onReady?: (map: L.Map) => void;
 }
@@ -53,8 +52,7 @@ export default function LeafletMap({ center, zoom, className, onReady }: Leaflet
       map.remove();
       mapRef.current = null;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // <- CRÍTICO: NÃO dependa de center/zoom por referência
+  }, []);
 
   return <div ref={containerRef} className={className} />;
 }

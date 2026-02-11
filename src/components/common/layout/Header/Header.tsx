@@ -1,6 +1,3 @@
-// Componente de Header global da aplicação.
-// Responsável apenas pela navegação e identidade visual.
-
 import { HashLink } from "react-router-hash-link";
 import styles from "./Header.module.css";
 import LocalizadorImg from "@/assets/localizador_img.png";

@@ -38,7 +38,7 @@ interface SearchBarProps {
 
 /**
  * Barra de busca com suporte opcional a sugestões (autocomplete)
- * e botão opcional de "rota".
+ * e botão de rota.
  *
  * @param {SearchBarProps} props
  * @returns {JSX.Element}

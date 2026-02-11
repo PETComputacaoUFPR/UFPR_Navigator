@@ -11,9 +11,6 @@ import markerShadow from "leaflet/dist/images/marker-shadow.png";
  * @returns {void}
  */
 export function configureLeafletDefaultIcons(): void {
-  // O Leaflet tenta resolver URLs sozinho. No Vite, isso pode falhar.
-  // Removendo este resolver interno, forçamos a usar os imports acima.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   delete (L.Icon.Default.prototype as any)._getIconUrl;
 
   L.Icon.Default.mergeOptions({

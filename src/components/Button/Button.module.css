@@ -14,7 +14,7 @@
   transition: background 0.3s ease;
 }
 
-/* Variação principal (equivalente ao variant="primary" da V1) */
+/* Variação principal */
 .primary {
   background: linear-gradient(104deg, #9ad1d4, #007ea7);
   color: #ffffff;
@@ -25,7 +25,7 @@
   background: linear-gradient(104deg, #8ac7ca, #006b94);
 }
 
-/* Variação secundária (equivalente ao variant="secondary" da V1) */
+/* Variação secundária */
 .secondary {
   background-color: #ffffff;
   color: #000000;
