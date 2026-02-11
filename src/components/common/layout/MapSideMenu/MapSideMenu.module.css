@@ -1,0 +1,92 @@
+.sideMenu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+
+  z-index: 900;
+
+  background: linear-gradient(to bottom, #6bbeca, #0e8ab9);
+  color: #fff;
+
+  /* animação de abrir/fechar */
+  transition: width 220ms ease;
+  overflow: hidden;
+
+  /* sombra sutil para destacar do mapa */
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.25);
+}
+
+/* aberto: painel largo */
+.open {
+  width: 300px;
+}
+
+/* fechado: apenas a faixa */
+.closed {
+  width: 56px;
+}
+
+.topBar {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 17px;
+}
+
+.iconBtn {
+  border: none;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+
+.content {
+  height: calc(100vh - 56px);
+  padding: 22px 22px 18px 22px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 10px;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  padding-left: 10px;
+}
+
+.link {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
+  opacity: 0.95;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-start;
+  padding-left: 10px;
+  opacity: 0.9;
+}
+
+.footerPlaceholder {
+  font-weight: 700;
+  font-size: 14px;
+}

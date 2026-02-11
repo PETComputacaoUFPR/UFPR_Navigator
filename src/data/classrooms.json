@@ -1,0 +1,38 @@
+{
+    "campi": [
+      { "id_campi": 1, "nome": "Centro Politécnico", "endereco_fk": 1 }
+    ],
+    "enderecos": [
+      {
+        "id_endereco": 1,
+        "cep": "81530015",
+        "uf": "PR",
+        "municipio": "Curitiba",
+        "bairro": "Jardim das Américas",
+        "logradouro": "R. Evaristo F. Ferreira da Costa",
+        "numero": "408"
+      }
+    ],
+    "unidadesAdm": [
+      {
+        "id_uni": 1,
+        "nome": "Setor de Exatas UFPRENDE",
+        "latitude": -25.450235,
+        "longitude": -49.230948,
+        "site": "https://exatas.ufpr.br/",
+        "endereco_fk": 1,
+        "campi_fk": 1
+      }
+    ],
+    "salas": [
+      { "id_sala": 1, "n_sala": "PA-01", "latitude": -25.4500892, "longitude": -49.2310481, "unidade_adm": 1 },
+      { "id_sala": 2, "n_sala": "PA-02", "latitude": -25.4501901, "longitude": -49.2307789, "unidade_adm": 1 },
+      { "id_sala": 3, "n_sala": "PA-03", "latitude": -25.4502293, "longitude": -49.2306774, "unidade_adm": 1 },
+      { "id_sala": 4, "n_sala": "PA-04", "latitude": -25.4502862, "longitude": -49.2306441, "unidade_adm": 1 },
+      { "id_sala": 5, "n_sala": "PA-05", "latitude": -25.4502207, "longitude": -49.2308194, "unidade_adm": 1 },
+      { "id_sala": 6, "n_sala": "PA-06", "latitude": -25.4501871, "longitude": -49.2309071, "unidade_adm": 1 },
+      { "id_sala": 7, "n_sala": "PA-07", "latitude": -25.4503268, "longitude": -49.2310013, "unidade_adm": 1 },
+      { "id_sala": 8, "n_sala": "PA-08", "latitude": -25.4503707, "longitude": -49.2308822, "unidade_adm": 1 },
+      { "id_sala": 9, "n_sala": "PA-09", "latitude": -25.450401,  "longitude": -49.2307555, "unidade_adm": 1 }
+    ]
+  }

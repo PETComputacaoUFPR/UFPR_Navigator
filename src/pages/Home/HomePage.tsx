@@ -81,7 +81,6 @@ function HomePage() {
         </Button>
       </section>
 
-      {/* ===== FOOTER ===== */}
       <Footer />
     </div>
   );

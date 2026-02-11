@@ -1,0 +1,20 @@
+.pageContainer {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.mapContainer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.topSearchOverlay {
+  position: absolute;
+  top: 55px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+}
