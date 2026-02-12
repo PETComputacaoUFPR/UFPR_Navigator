@@ -69,6 +69,6 @@
   cursor: pointer;
 }
 
-.suggestionItem:hover {
+.suggestionItem.active {
   background: rgba(255, 255, 255, 0.12);
 }

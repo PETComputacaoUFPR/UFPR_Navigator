@@ -55,6 +55,8 @@ export default function SearchBar({
 }: SearchBarProps) {
   const [value, setValue] = useState("");
   const [open, setOpen] = useState(false);
+  // Indice selecionado na lista de sugestoes
+  const [selectedIndex, setSelectedIndex] = useState(-1);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
   const suggestions = useMemo(() => {
@@ -86,6 +88,44 @@ export default function SearchBar({
     setOpen(false);
   }
 
+  /**
+   * Controla a navegação por teclado da lista de sugestões.
+   *
+   * - Enter: seleciona a sugestão selecionada ou o valor do input, e executa a busca
+   * - ArrowDown: avança uma posição na lista de sugestões
+   * - ArrowUp: retorna uma posição na lista de sugestões
+   * @param {React.KeyboardEvent<HTMLInputElement>} e
+   * @returns {void}
+   */
+  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>): void {
+    if (e.key == "Enter") {
+      if (selectedIndex != -1) {
+        selectSuggestion(suggestions[selectedIndex]);
+      } else {
+        doSearch();
+      }
+      return;
+    }
+
+    if (suggestions.length == 0) return;
+
+    //  Como depende do estado anterior, utiliza o prev para garantir mais seguranca
+    if (e.key == "ArrowDown") {
+      setSelectedIndex((prev) => (prev + 1) % suggestions.length);
+    }
+
+    if (e.key == "ArrowUp") {
+      setSelectedIndex(
+        (prev) => (prev + suggestions.length - 1) % suggestions.length,
+      );
+    }
+  }
+
+  // Reinicia o indice selecionado na lista de sugestoes
+  useEffect(() => {
+    setSelectedIndex(-1);
+  }, [suggestions]);
+
   // Fecha dropdown ao clicar fora
   useEffect(() => {
     function onDocMouseDown(e: MouseEvent) {
@@ -99,7 +139,11 @@ export default function SearchBar({
 
   return (
     <div ref={rootRef} className={styles.root} style={{ width }}>
-      <div className={styles.container} style={{ height, background }} role="search">
+      <div
+        className={styles.container}
+        style={{ height, background }}
+        role="search"
+      >
         <input
           className={styles.input}
           type="text"
@@ -110,11 +154,15 @@ export default function SearchBar({
             setOpen(true);
           }}
           onFocus={() => setOpen(true)}
-          onKeyDown={(e) => e.key === "Enter" && doSearch()}
+          onKeyDown={handleKeyDown}
           aria-label="Pesquisar"
         />
 
-        <button className={styles.iconButton} onClick={doSearch} aria-label="Buscar">
+        <button
+          className={styles.iconButton}
+          onClick={doSearch}
+          aria-label="Buscar"
+        >
           <IoMdSearch size={22} />
         </button>
 
@@ -132,12 +180,18 @@ export default function SearchBar({
 
       {getSuggestions && open && suggestions.length > 0 && (
         <div className={styles.suggestions} role="listbox">
-          {suggestions.map((s) => (
+          {suggestions.map((s, index) => (
             <button
               key={s.key}
               type="button"
-              className={styles.suggestionItem}
+              // Destaca a sugestao selecionada pelo mouse ou teclado
+              className={`${styles.suggestionItem} ${
+                selectedIndex == index ? styles.active : ""
+              }`}
               onMouseDown={(e) => e.preventDefault()}
+              // Eventos para sincronizar mouse/teclado (substitui hover)
+              onMouseEnter={() => setSelectedIndex(index)}
+              onMouseLeave={() => setSelectedIndex(-1)}
               onClick={() => selectSuggestion(s)}
               role="option"
             >
