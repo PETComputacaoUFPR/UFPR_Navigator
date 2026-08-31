@@ -20,9 +20,8 @@
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,
-    "baseUrl": "./src",
     "paths": {
-      "@/*": ["*"]
+      "@/*": ["./src/*"]
     },
     "noUnusedLocals": true,
     "noUnusedParameters": true,

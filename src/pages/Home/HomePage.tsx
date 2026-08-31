@@ -24,7 +24,7 @@ function HomePage() {
             </div>
 
             <Button to="/mapa" variant="secondary">
-              ACESSE O MAPA
+              ENCONTRE SUA SALA
             </Button>
           </div>
 
@@ -73,7 +73,7 @@ function HomePage() {
         </div>
 
         <Button to="/mapa" variant="primary">
-          ACESSE O MAPA
+          ENCONTRE SUA SALA
         </Button>
       </section>
 
