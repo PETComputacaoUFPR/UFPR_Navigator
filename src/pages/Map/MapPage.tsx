@@ -37,7 +37,7 @@ export default function MapPage() {
   }, [isMenuOpen]);
 
   const pageStyle = useMemo(() => {
-    return { ["--route-panel-left" as any]: routePanelLeft };
+    return { "--route-panel-left": routePanelLeft } as React.CSSProperties;
   }, [routePanelLeft]);
 
   /**
