@@ -64,6 +64,13 @@ export default function SearchBar({
     return getSuggestions(value);
   }, [getSuggestions, value]);
 
+  // Reinicia o indice selecionado na lista de sugestoes, não é bom usar useEffect  e useState combinado
+  const [prevSuggestions, setPrevSuggestions] = useState(suggestions);
+  if (suggestions !== prevSuggestions) {
+    setPrevSuggestions(suggestions);
+    setSelectedIndex(-1);
+  }
+
   /**
    * Executa a pesquisa usando o valor atual.
    *
@@ -116,15 +123,13 @@ export default function SearchBar({
 
     if (e.key == "ArrowUp") {
       setSelectedIndex(
-        (prev) => (prev + suggestions.length - 1) % suggestions.length,
-      );
+        (prev) => {
+          // previne que vá para o antepenúltimo elemento da lista quando selectedIndex é inicializado
+          const decrement = prev != -1 ? 1 : 0;
+          return (prev + suggestions.length - decrement) % suggestions.length;
+        });
     }
   }
-
-  // Reinicia o indice selecionado na lista de sugestoes
-  useEffect(() => {
-    setSelectedIndex(-1);
-  }, [suggestions]);
 
   // Fecha dropdown ao clicar fora
   useEffect(() => {
