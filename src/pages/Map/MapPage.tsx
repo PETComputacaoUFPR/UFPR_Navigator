@@ -1,13 +1,15 @@
 import { useCallback, useRef, useState, useMemo } from "react";
 import L from "leaflet";
 import styles from "./MapPage.module.css";
-import LeafletMap from "../../components/common/LeafletMap";
-import SearchBar, {
-  type SearchSuggestion,
-} from "@/components/common/SearchBar/SearchBar";
-import { useSalaSearch } from "@/hooks/useClassrooms";
+import LeafletMap from "@/components/common/LeafletMap";
+import SearchBar, { type SearchSuggestion } from "@/components/common/SearchBar/SearchBar";
 import MapSideMenu from "@/components/common/layout/MapSideMenu/MapSideMenu";
 import RoutePanel from "@/components/common/layout/RoutePanel/RoutePanel";
+import { Map } from "@/classes/Map";
+import { IndoorGraph } from "@/classes/IndoorGraph.ts";
+import { Classroom } from "@/classes/Classroom.ts";
+import { Building } from "@/classes/Building.ts";
+import { formatDuration, addSecondsToCurrentTime } from "@/utils/timeUtils.ts";
 
 /**
  * Página do mapa com busca de salas
@@ -15,17 +17,12 @@ import RoutePanel from "@/components/common/layout/RoutePanel/RoutePanel";
  * @returns {JSX.Element}
  */
 export default function MapPage() {
-  const { findSala, getSalaSuggestions } = useSalaSearch();
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isRoutePanelOpen, setIsRoutePanelOpen] = useState(false);
-
-  {/* Tempo estimado da rota atual (em minutos). Null quando não calculado. */}
   const [routeMinutes, setRouteMinutes] = useState<number | null>(null);
 
   const mapRef = useRef<L.Map | null>(null);
   const resultLayerRef = useRef<L.LayerGroup | null>(null);
-
 
   const MENU_WIDTH_OPEN = 300;
   const MENU_WIDTH_CLOSED = 56;
@@ -111,9 +108,7 @@ export default function MapPage() {
    * Nesta etapa: placeholder (implementar geolocalização).
    */
   function handleSidebarMeuLocal(): void {
-    alert(
-      "implementar a geolocalização para centralizar no seu local."
-    );
+    alert("implementar a geolocalização para centralizar no seu local.");
   }
 
   function handleSidebarDestino(termRaw: string): void {
@@ -122,9 +117,7 @@ export default function MapPage() {
       alert("Sala não encontrada. Tente algo como: PA-05");
       return;
     }
-    alert(
-      `Destino selecionado: ${sala.n_sala}. Próximo passo: desenhar rota e tempo.`
-    );
+    alert(`Destino selecionado: ${sala.n_sala}. Próximo passo: desenhar rota e tempo.`);
     setRouteMinutes(null);
   }
 
@@ -135,12 +128,7 @@ export default function MapPage() {
 
   return (
     <div className={styles.pageContainer} style={pageStyle}>
-      <LeafletMap
-        className={styles.mapContainer}
-        center={[-25.450223, -49.233239]}
-        zoom={16}
-        onReady={handleMapReady}
-      />
+      <LeafletMap className={styles.mapContainer} center={[-25.450223, -49.233239]} zoom={16} onReady={handleMapReady} />
 
       <MapSideMenu
         isOpen={isMenuOpen}
