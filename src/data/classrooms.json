@@ -126,7 +126,13 @@
     { "id": 124, "name": "PH-11", "coordinate": { "latitude": -25.452888, "longitude": -49.232779 }, "building_id": 9, "floor": 1 },
     { "id": 125, "name": "LABSAN", "coordinate": { "latitude": -25.452804, "longitude": -49.232968 }, "building_id": 9, "floor": 1 },
     { "id": 126, "name": "BIOSAM", "coordinate": { "latitude": -25.452755, "longitude": -49.233125 }, "building_id": 9, "floor": 1 },
-    { "id": 127, "name": "LAB. ENG AMBIENTAL", "coordinate": { "latitude": -25.452716, "longitude": -49.23322 }, "building_id": 9, "floor": 1 },
+    {
+      "id": 127,
+      "name": "LAB. ENG AMBIENTAL",
+      "coordinate": { "latitude": -25.452716, "longitude": -49.23322 },
+      "building_id": 9,
+      "floor": 1
+    },
     { "id": 128, "name": "PH-16", "coordinate": { "latitude": -25.452648, "longitude": -49.233418 }, "building_id": 9, "floor": 1 },
     { "id": 129, "name": "PH-17", "coordinate": { "latitude": -25.452611, "longitude": -49.233519 }, "building_id": 9, "floor": 1 },
     { "id": 130, "name": "PH-18", "coordinate": { "latitude": -25.452601, "longitude": -49.233571 }, "building_id": 9, "floor": 1 },

@@ -44,14 +44,14 @@ function HomePage() {
           <h1 className={styles.about_title}>Sobre a aplicação</h1>
 
           <p className={styles.about_info}>
-            O UFPR Navigator é uma aplicação web desenvolvida pelo PET Computação da Universidade Federal do Paraná (UFPR) 
-            com o objetivo de facilitar a orientação espacial e o deslocamento de pessoas no Campus Centro Politécnico, em Curitiba. 
-            A plataforma permite localizar salas e ambientes acadêmicos de forma rápida e intuitiva, reduzindo atrasos e dificuldades
-            enfrentadas por estudantes, visitantes e servidores em um campus extenso e com múltiplos blocos.
+            O UFPR Navigator é uma aplicação web desenvolvida pelo PET Computação da Universidade Federal do Paraná (UFPR) com o objetivo de
+            facilitar a orientação espacial e o deslocamento de pessoas no Campus Centro Politécnico, em Curitiba. A plataforma permite
+            localizar salas e ambientes acadêmicos de forma rápida e intuitiva, reduzindo atrasos e dificuldades enfrentadas por estudantes,
+            visitantes e servidores em um campus extenso e com múltiplos blocos.
             <span className={styles.about_break} />
-            Esta é a primeira versão do sistema, que se encontra em desenvolvimento contínuo. Atualmente, a aplicação integra uma 
-            modelagem inicial de dados e uma interface cartográfica interativa, permitindo a busca por salas, sua visualização no mapa
-            e a geração de rotas até o destino.
+            Esta é a primeira versão do sistema, que se encontra em desenvolvimento contínuo. Atualmente, a aplicação integra uma modelagem
+            inicial de dados e uma interface cartográfica interativa, permitindo a busca por salas, sua visualização no mapa e a geração de
+            rotas até o destino.
           </p>
         </div>
       </section>
@@ -62,13 +62,7 @@ function HomePage() {
 
         <div className={styles.devs_team}>
           {developers.map((dev, index) => (
-            <DevCard
-              key={`${dev.name}-${index}`}
-              name={dev.name}
-              role={dev.role}
-              website={dev.website}
-              image={dev.image}
-            />
+            <DevCard key={`${dev.name}-${index}`} name={dev.name} role={dev.role} website={dev.website} image={dev.image} />
           ))}
         </div>
 

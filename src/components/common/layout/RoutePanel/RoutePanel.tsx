@@ -3,9 +3,11 @@ import SearchBar from "@/components/common/SearchBar/SearchBar";
 import { FaRegCircle } from "react-icons/fa";
 import { PiDotsThreeVerticalBold } from "react-icons/pi";
 import { LuMapPin } from "react-icons/lu";
-import { GoHomeFill } from "react-icons/go";
+// import { GoHomeFill } from "react-icons/go";
 import { MdEditSquare } from "react-icons/md";
 import { FaPersonWalking } from "react-icons/fa6";
+import type { Classroom_t, ClassroomWithAccess_t } from "@/classes/Classroom.ts";
+import { type Coordinate_t } from "@/classes/Place.ts";
 
 /**
  * Propriedades do painel lateral de rotas
@@ -21,18 +23,26 @@ export interface RoutePanelProps {
    * Quando null, deve renderizar "—"
    */
   routeMinutes: number | null;
+  destination: ClassroomWithAccess_t | null;
+  origin: Coordinate_t | null;
+
+  /**
+   * Função opcional para fornecer sugestões em tempo real.
+   * Se definida, a SearchBar exibirá dropdown abaixo do input.
+   */
+  getSuggestions?: (query: string) => Classroom_t[];
 
   /**
    * Ação do campo "Meu Local"
    */
-  onMeuLocalSearch: () => void;
+  onOriginSearch: (term: string | Coordinate_t) => void;
 
   /**
    * Ação do campo "Local Destino"
    *
    * @param {string} term Termo digitado.
    */
-  onDestinoSearch: (term: string) => void;
+  onDestinationSearch: (term: string) => ClassroomWithAccess_t | null;
 }
 
 /**
@@ -44,8 +54,11 @@ export interface RoutePanelProps {
 export default function RoutePanel({
   isOpen,
   routeMinutes,
-  onMeuLocalSearch,
-  onDestinoSearch,
+  destination,
+  origin,
+  getSuggestions,
+  onOriginSearch,
+  onDestinationSearch,
 }: RoutePanelProps) {
   if (!isOpen) return null;
 
@@ -65,16 +78,21 @@ export default function RoutePanel({
             background="#007EA7"
             placeholder="Meu Local"
             showRouteIcon={false}
-            onSearch={() => onMeuLocalSearch()}
+            onSearch={(v) => onOriginSearch(v)}
+            getSuggestions={getSuggestions}
+            originCoord={origin}
           />
 
           <SearchBar
             width="100%"
             height="50px"
             background="#007EA7"
-            placeholder="Local Destino"
+            placeholder={destination ? destination.name : "Local Destino"}
             showRouteIcon={false}
-            onSearch={(v) => onDestinoSearch(v)}
+            onSearch={(v) => {
+              if (typeof v == "string") onDestinationSearch(v);
+            }}
+            {...(getSuggestions && { getSuggestions: getSuggestions })}
           />
         </div>
       </div>
@@ -89,20 +107,20 @@ export default function RoutePanel({
       </div>
 
       {/* Locais Próximos (por enquanto placeholder) */}
-      <div className={styles.secondDivRoute}>
+      {/* <div className={styles.secondDivRoute}>
         <h3>Locais Próximos</h3>
         <div className={styles.line}>
           <GoHomeFill size={24} />
           <p>Local tal</p>
         </div>
-      </div>
+      </div> */}
 
       {/* Sugestões (por enquanto placeholder) */}
       <div className={styles.thirdDivRoute}>
         <h3>Sugestões</h3>
         <div className={styles.line}>
           <MdEditSquare size={24} />
-          <p>Sugerir ponto de referência</p>
+          <p>Relatar problemas</p>
         </div>
         <div className={styles.line}>
           <MdEditSquare size={24} />

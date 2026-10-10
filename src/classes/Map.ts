@@ -81,6 +81,10 @@ export class Map {
     return this._routeData.distance;
   }
 
+  public invalidateSize(): void {
+    this.map.invalidateSize();
+  }
+
   /**
    * Inicia o monitoramento da geolocalização do usuário.
    *

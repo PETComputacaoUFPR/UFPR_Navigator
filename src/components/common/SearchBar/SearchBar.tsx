@@ -1,20 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { IoMdSearch } from "react-icons/io";
 import { LuMapPin } from "react-icons/lu";
+import { type Classroom_t } from "@/classes/Classroom.ts";
+import { type Coordinate_t } from "@/classes/Place.ts";
 import styles from "./SearchBar.module.css";
-
-export type SearchSuggestion = {
-  /** Identificador único da sugestão. */
-  key: string;
-  /** Texto exibido na lista. */
-  label: string;
-  /** Valor enviado ao onSearch ao clicar. */
-  value: string;
-};
 
 interface SearchBarProps {
   placeholder?: string;
-  onSearch?: (value: string) => void;
+  onSearch?: (value: string | Coordinate_t) => void;
   width?: string;
   height?: string;
   background?: string;
@@ -23,7 +16,7 @@ interface SearchBarProps {
    * Função opcional para fornecer sugestões em tempo real.
    * Se definida, a SearchBar exibirá dropdown abaixo do input.
    */
-  getSuggestions?: (query: string) => SearchSuggestion[];
+  getSuggestions?: (query: string) => Classroom_t[];
 
   /**
    * Exibe o ícone de rota (ao lado da lupa).
@@ -34,6 +27,8 @@ interface SearchBarProps {
    * Callback ao clicar no ícone de rota.
    */
   onRouteClick?: () => void;
+
+  originCoord?: Coordinate_t | null;
 }
 
 /**
@@ -52,7 +47,9 @@ export default function SearchBar({
   getSuggestions,
   showRouteIcon = false,
   onRouteClick,
+  originCoord,
 }: SearchBarProps) {
+  const offset = originCoord ? 1 : 0;
   const [value, setValue] = useState("");
   const [open, setOpen] = useState(false);
   // Indice selecionado na lista de sugestoes
@@ -86,12 +83,17 @@ export default function SearchBar({
   /**
    * Seleciona uma sugestão e pesquisa imediatamente.
    *
-   * @param {SearchSuggestion} s
+   * @param {Classroom_t} s
    * @returns {void}
    */
-  function selectSuggestion(s: SearchSuggestion): void {
-    setValue(s.value);
-    onSearch?.(s.value);
+  function selectSuggestion(suggestion: Classroom_t | Coordinate_t): void {
+    if ("name" in suggestion) {
+      setValue(suggestion.name);
+      onSearch?.(suggestion.name);
+    } else {
+      setValue("Meu Local");
+      onSearch?.(suggestion);
+    }
     setOpen(false);
   }
 
@@ -105,9 +107,14 @@ export default function SearchBar({
    * @returns {void}
    */
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>): void {
+    const totalSuggestions = suggestions.length + offset;
     if (e.key == "Enter") {
       if (selectedIndex != -1) {
-        selectSuggestion(suggestions[selectedIndex]);
+        if (originCoord && selectedIndex == 0) {
+          selectSuggestion(originCoord);
+        } else {
+          selectSuggestion(suggestions[selectedIndex]);
+        }
       } else {
         doSearch();
       }
@@ -118,16 +125,15 @@ export default function SearchBar({
 
     //  Como depende do estado anterior, utiliza o prev para garantir mais seguranca
     if (e.key == "ArrowDown") {
-      setSelectedIndex((prev) => (prev + 1) % suggestions.length);
+      setSelectedIndex((prev) => (prev + 1) % totalSuggestions);
     }
 
     if (e.key == "ArrowUp") {
-      setSelectedIndex(
-        (prev) => {
-          // previne que vá para o antepenúltimo elemento da lista quando selectedIndex é inicializado
-          const decrement = prev != -1 ? 1 : 0;
-          return (prev + suggestions.length - decrement) % suggestions.length;
-        });
+      setSelectedIndex((prev) => {
+        // previne que vá para o antepenúltimo elemento da lista quando selectedIndex é inicializado
+        const decrement = prev != -1 ? 1 : 0;
+        return (prev + totalSuggestions - decrement) % totalSuggestions;
+      });
     }
   }
 
@@ -144,11 +150,7 @@ export default function SearchBar({
 
   return (
     <div ref={rootRef} className={styles.root} style={{ width }}>
-      <div
-        className={styles.container}
-        style={{ height, background }}
-        role="search"
-      >
+      <div className={styles.container} style={{ height, background }} role="search">
         <input
           className={styles.input}
           type="text"
@@ -163,44 +165,49 @@ export default function SearchBar({
           aria-label="Pesquisar"
         />
 
-        <button
-          className={styles.iconButton}
-          onClick={doSearch}
-          aria-label="Buscar"
-        >
+        <button className={styles.iconButton} onClick={doSearch} aria-label="Buscar">
           <IoMdSearch size={22} />
         </button>
 
         {showRouteIcon && (
-          <button
-            className={styles.iconButton}
-            type="button"
-            onClick={onRouteClick}
-            aria-label="Abrir rotas"
-          >
+          <button className={styles.iconButton} type="button" onClick={onRouteClick} aria-label="Abrir rotas">
             <LuMapPin size={22} />
           </button>
         )}
       </div>
 
-      {getSuggestions && open && suggestions.length > 0 && (
+      {getSuggestions && open && (suggestions.length > 0 || originCoord) && (
         <div className={styles.suggestions} role="listbox">
-          {suggestions.map((s, index) => (
+          {originCoord && (
             <button
-              key={s.key}
+              key={0}
               type="button"
               // Destaca a sugestao selecionada pelo mouse ou teclado
-              className={`${styles.suggestionItem} ${
-                selectedIndex == index ? styles.active : ""
-              }`}
+              className={`${styles.suggestionItem} ${selectedIndex == 0 ? styles.active : ""}`}
               onMouseDown={(e) => e.preventDefault()}
               // Eventos para sincronizar mouse/teclado (substitui hover)
-              onMouseEnter={() => setSelectedIndex(index)}
+              onMouseEnter={() => setSelectedIndex(0)}
               onMouseLeave={() => setSelectedIndex(-1)}
-              onClick={() => selectSuggestion(s)}
+              onClick={() => selectSuggestion(originCoord)}
               role="option"
             >
-              {s.label}
+              "Meu Local"
+            </button>
+          )}
+          {suggestions.map((suggestion, index) => (
+            <button
+              key={suggestion.id}
+              type="button"
+              // Destaca a sugestao selecionada pelo mouse ou teclado
+              className={`${styles.suggestionItem} ${selectedIndex == index + offset ? styles.active : ""}`}
+              onMouseDown={(e) => e.preventDefault()}
+              // Eventos para sincronizar mouse/teclado (substitui hover)
+              onMouseEnter={() => setSelectedIndex(index + offset)}
+              onMouseLeave={() => setSelectedIndex(-1)}
+              onClick={() => selectSuggestion(suggestion)}
+              role="option"
+            >
+              {suggestion.name}
             </button>
           ))}
         </div>

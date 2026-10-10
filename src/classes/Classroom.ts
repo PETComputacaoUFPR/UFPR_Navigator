@@ -2,7 +2,7 @@ import classroomData from "../data/classrooms.json" with { type: "json" };
 import { type Coordinate_t } from "./Place.ts";
 import { Building } from "./Building.ts";
 
-type Classroom_t = {
+export type Classroom_t = {
   id: number;
   name: string;
   coordinate: Coordinate_t;
@@ -10,7 +10,7 @@ type Classroom_t = {
   floor: number;
 };
 
-type ClassroomWithAccess_t = {
+export type ClassroomWithAccess_t = {
   id: number;
   name: string;
   coordinate: Coordinate_t;

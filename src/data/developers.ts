@@ -31,6 +31,6 @@ export const developers: Developer[] = [
     name: "...",
     role: "Desenvolvedora",
     website: "https://web.inf.ufpr.br/pet/",
-    image: DefaultImg, 
+    image: DefaultImg,
   },
 ];

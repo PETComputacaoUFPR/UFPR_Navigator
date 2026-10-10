@@ -13,25 +13,20 @@ function Footer() {
     <footer className={styles.footer}>
       {/* Logo do sistema */}
       <div>
-        <img
-          src={LocalizadorImg}
-          alt="Logo Localizador"
-          width={170}
-          height={65}
-        />
+        <img src={LocalizadorImg} alt="Logo Localizador" width={170} height={65} />
       </div>
 
       {/* Área de redes sociais e site */}
       <div className={styles.social}>
         <div className={styles.socialRow}>
-          <TbWorldWww size={25}/>
+          <TbWorldWww size={25} />
           <a href={PET_SITE_URL} target="_blank">
             petcomp.ufpr.br
           </a>
         </div>
 
         <div className={styles.socialRow}>
-          <FaInstagram size={25}/>
+          <FaInstagram size={25} />
           <a href={PET_INSTAGRAM_URL} target="_blank">
             petcompufpr
           </a>

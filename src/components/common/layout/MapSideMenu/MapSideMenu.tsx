@@ -33,24 +33,12 @@ export interface MapSideMenuProps {
  * @param {MapSideMenuProps} props
  * @returns {JSX.Element}
  */
-export default function MapSideMenu({
-  isOpen,
-  onToggle,
-  showFooterLogo = true,
-}: MapSideMenuProps) {
+export default function MapSideMenu({ isOpen, onToggle, showFooterLogo = true }: MapSideMenuProps) {
   return (
-    <aside
-      className={`${styles.sideMenu} ${isOpen ? styles.open : styles.closed}`}
-      aria-label="Menu lateral do mapa"
-    >
+    <aside className={`${styles.sideMenu} ${isOpen ? styles.open : styles.closed}`} aria-label="Menu lateral do mapa">
       {/* Top bar (sempre visível) */}
       <div className={styles.topBar}>
-        <button
-          type="button"
-          className={styles.iconBtn}
-          onClick={onToggle}
-          aria-label={isOpen ? "Fechar menu" : "Abrir menu"}
-        >
+        <button type="button" className={styles.iconBtn} onClick={onToggle} aria-label={isOpen ? "Fechar menu" : "Abrir menu"}>
           {isOpen ? <IoClose size={22} /> : <GiHamburgerMenu size={22} />}
         </button>
       </div>
@@ -59,12 +47,7 @@ export default function MapSideMenu({
       {isOpen && (
         <div className={styles.content}>
           <div className={styles.brand}>
-            <img
-              src={LocalizadorImg}
-              alt="Localizador de Salas"
-              width={170}
-              height={65}
-            />
+            <img src={LocalizadorImg} alt="Localizador de Salas" width={170} height={65} />
           </div>
 
           <nav className={styles.nav} aria-label="Navegação">
@@ -82,12 +65,7 @@ export default function MapSideMenu({
           {showFooterLogo && (
             <div className={styles.footer}>
               <div className={styles.footerPlaceholder}>
-                <img
-                  src={PetImg}
-                  alt="Logo PET Computação"
-                  width={180}
-                  height={67}
-                />
+                <img src={PetImg} alt="Logo PET Computação" width={180} height={67} />
               </div>
             </div>
           )}
