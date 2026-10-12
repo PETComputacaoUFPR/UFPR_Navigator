@@ -41,8 +41,7 @@ export default function LeafletMap({ center, zoom, className, onReady }: Leaflet
 
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
-      attribution:
-        '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(map);
 
     mapRef.current = map;
@@ -52,7 +51,7 @@ export default function LeafletMap({ center, zoom, className, onReady }: Leaflet
       map.remove();
       mapRef.current = null;
     };
-  }, []);
+  }, [center, zoom]);
 
   return <div ref={containerRef} className={className} />;
 }

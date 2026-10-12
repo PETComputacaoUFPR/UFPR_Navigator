@@ -1,13 +1,18 @@
-import { useCallback, useRef, useState, useMemo } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import L from "leaflet";
 import styles from "./MapPage.module.css";
-import LeafletMap from "../../components/common/LeafletMap";
-import SearchBar, {
-  type SearchSuggestion,
-} from "@/components/common/SearchBar/SearchBar";
-import { useSalaSearch } from "@/hooks/useClassrooms";
+import LeafletMap from "@/components/common/LeafletMap";
+import SearchBar from "@/components/common/SearchBar/SearchBar";
 import MapSideMenu from "@/components/common/layout/MapSideMenu/MapSideMenu";
 import RoutePanel from "@/components/common/layout/RoutePanel/RoutePanel";
+import { Map } from "@/classes/Map";
+import { type Coordinate_t } from "@/classes/Place.ts";
+import { type Classroom_t, type ClassroomWithAccess_t, Classroom } from "@/classes/Classroom.ts";
+import { Building } from "@/classes/Building";
+import { addSecondsToCurrentTime, secToMin } from "@/utils/timeUtils";
+
+const MAP_CENTER: [number, number] = [-25.450223, -49.233239];
+const MAP_ZOOM = 16;
 
 /**
  * Página do mapa com busca de salas
@@ -15,66 +20,60 @@ import RoutePanel from "@/components/common/layout/RoutePanel/RoutePanel";
  * @returns {JSX.Element}
  */
 export default function MapPage() {
-  const { findSala, getSalaSuggestions } = useSalaSearch();
-
+  const mapClassRef = useRef<Map | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isRoutePanelOpen, setIsRoutePanelOpen] = useState(false);
+  const [origin, setOrigin] = useState<Coordinate_t | ClassroomWithAccess_t | null>(null);
+  const [userCoord, setUserCoord] = useState<Coordinate_t | null>(null);
+  const [destination, setDestination] = useState<ClassroomWithAccess_t | null>(null);
+  const [routeDistance, setRouteDistance] = useState<number | null>(null);
+  const [routeDuration, setRouteDuration] = useState<number | null>(null);
 
-  {/* Tempo estimado da rota atual (em minutos). Null quando não calculado. */}
-  const [routeMinutes, setRouteMinutes] = useState<number | null>(null);
-
-  const mapRef = useRef<L.Map | null>(null);
-  const resultLayerRef = useRef<L.LayerGroup | null>(null);
-
+  const handleMapReady = useCallback((leafletMap: L.Map) => {
+    mapClassRef.current?.destroy();
+    mapClassRef.current = new Map(leafletMap);
+    mapClassRef.current.watchUserPosition();
+  }, []);
 
   const MENU_WIDTH_OPEN = 300;
   const MENU_WIDTH_CLOSED = 56;
   const ROUTE_PANEL_GAP = 24;
+  const ROUTE_PANEL_WIDTH = 360;
 
-  const routePanelLeft = useMemo(() => {
-    const menuW = isMenuOpen ? MENU_WIDTH_OPEN : MENU_WIDTH_CLOSED;
-    return `calc(${menuW}px + ${ROUTE_PANEL_GAP}px)`;
-  }, [isMenuOpen]);
+  const menuWidth = isMenuOpen ? MENU_WIDTH_OPEN : MENU_WIDTH_CLOSED;
+  const leftPadding = menuWidth + ROUTE_PANEL_GAP + ROUTE_PANEL_WIDTH;
 
-  const pageStyle = useMemo(() => {
-    return { "--route-panel-left": routePanelLeft } as React.CSSProperties;
-  }, [routePanelLeft]);
+  const pageStyle = {
+    "--route-panel-left": `calc(${menuWidth}px + ${ROUTE_PANEL_GAP}px)`,
+  } as React.CSSProperties;
 
-  /**
-   * Callback quando o mapa estiver pronto.
-   * Cria a layer exclusiva para resultados (pin único).
-   *
-   * @param {L.Map} map Instância do mapa Leaflet.
-   * @returns {void}
-   */
-  const handleMapReady = useCallback((map: L.Map) => {
-    mapRef.current = map;
-    resultLayerRef.current = L.layerGroup().addTo(map);
-  }, []);
+  function findDestination(termRaw: string): ClassroomWithAccess_t | null {
+    const classroom = Classroom.find(termRaw);
+    if (!classroom) {
+      alert("Sala não encontrada.");
+      return null;
+    }
+    mapClassRef.current?.addMarker(classroom.coordinate, classroom.name);
+    setDestination(classroom);
 
-  /**
-   * Define um único pin no mapa (limpa o anterior), centraliza e aproxima.
-   *
-   * @param {number} lat Latitude do destino.
-   * @param {number} lng Longitude do destino.
-   * @param {string} label Texto do tooltip.
-   * @returns {void}
-   */
-  function setSinglePin(lat: number, lng: number, label: string): void {
-    const map = mapRef.current;
-    const layer = resultLayerRef.current;
-    if (!map || !layer) return;
+    return classroom;
+  }
 
-    layer.clearLayers();
+  function findOrigin(termRaw: string): void {
+    const classroom = Classroom.find(termRaw);
+    if (!classroom) {
+      alert("Sala não encontrada.");
+      return;
+    }
+    mapClassRef.current?.addMarker(classroom.coordinate, classroom.name);
+    setOrigin(classroom);
+  }
 
-    const marker = L.marker([lat, lng]).bindTooltip(label, {
-      permanent: false,
-      direction: "top",
-      offset: [0, -10],
-    });
-
-    layer.addLayer(marker);
-    map.setView([lat, lng], 19, { animate: true });
+  function openRoutePanel(): void {
+    setIsRoutePanelOpen(true);
+    //TODO: deixar o ponto de origem dinâmico se for localização do usuario
+    setUserCoord((prev) => prev ?? mapClassRef.current?.userCoords ?? null);
+    setOrigin((prev) => prev ?? mapClassRef.current?.userCoords ?? null);
   }
 
   /**
@@ -84,63 +83,64 @@ export default function MapPage() {
    * @returns {void}
    */
 
-  function handleSearch(termRaw: string): void {
-    const sala = findSala(termRaw);
-    if (!sala) {
-      alert("Sala não encontrada. Tente algo como: PA-05");
-      return;
-    }
-    setSinglePin(sala.latitude, sala.longitude, sala.n_sala);
+  function handleSearch(termRaw: string | Coordinate_t): void {
+    if (typeof termRaw != "string") return;
+    const classroom = findDestination(termRaw);
+    if (!classroom) return;
+    openRoutePanel();
   }
 
   /**
    * Sugestões do topo com base nas salas do JSON.
    *
-   * @param {string} q
+   * @param {string} query
    * @returns {SearchSuggestion[]}
    */
-  function getTopSuggestions(q: string): SearchSuggestion[] {
-    return getSalaSuggestions(q, 8).map((s) => ({
-      key: String(s.id_sala),
-      label: s.n_sala,
-      value: s.n_sala,
-    }));
+  function getTopSuggestions(query: string): Classroom_t[] {
+    return Classroom.getSuggestions(query, 8);
   }
 
   /**
    * Nesta etapa: placeholder (implementar geolocalização).
    */
-  function handleSidebarMeuLocal(): void {
-    alert(
-      "implementar a geolocalização para centralizar no seu local."
-    );
-  }
-
-  function handleSidebarDestino(termRaw: string): void {
-    const sala = findSala(termRaw);
-    if (!sala) {
-      alert("Sala não encontrada. Tente algo como: PA-05");
-      return;
+  function handleSidebarMeuLocal(term: string | Coordinate_t): void {
+    if (typeof term == "string") {
+      findOrigin(term);
+    } else {
+      mapClassRef.current?.addMarker(term);
+      setOrigin(term);
     }
-    alert(
-      `Destino selecionado: ${sala.n_sala}. Próximo passo: desenhar rota e tempo.`
-    );
-    setRouteMinutes(null);
   }
 
-  function toggleRoutePanel(): void {
-    setIsRoutePanelOpen((v) => !v);
-    window.setTimeout(() => mapRef.current?.invalidateSize(), 250);
-  }
+  useEffect(() => {
+    if (!origin || !destination || !mapClassRef.current) return;
+    let originEntrance: Coordinate_t | null;
+    let destinationEntrance: Coordinate_t | null;
+
+    if ("name" in origin) {
+      originEntrance = Building.getNearestEntrance(origin.building_id, origin.coordinate);
+      destinationEntrance = Building.getNearestEntrance(destination.building_id, origin.coordinate);
+    } else {
+      originEntrance = origin;
+      destinationEntrance = Building.getNearestEntrance(destination.building_id, origin);
+    }
+    (async () => {
+      if (originEntrance && destinationEntrance) {
+        await mapClassRef.current?.drawRoute(originEntrance, destinationEntrance, leftPadding);
+        setRouteDistance(mapClassRef.current?.routeDistance ?? null);
+        setRouteDuration(mapClassRef.current?.routeDuration ?? null);
+      }
+    })();
+  }, [origin, destination, leftPadding]);
+
+  // function toggleRoutePanel(): void {
+  //   setIsRoutePanelOpen((v) => !v);
+  //   window.setTimeout(() => mapClassRef.current?.invalidateSize(), 250);
+  // }
 
   return (
     <div className={styles.pageContainer} style={pageStyle}>
-      <LeafletMap
-        className={styles.mapContainer}
-        center={[-25.450223, -49.233239]}
-        zoom={16}
-        onReady={handleMapReady}
-      />
+      <LeafletMap className={styles.mapContainer} center={MAP_CENTER} zoom={MAP_ZOOM} onReady={handleMapReady} />
 
       <MapSideMenu
         isOpen={isMenuOpen}
@@ -149,7 +149,7 @@ export default function MapPage() {
 
           // Recalcula tamanho após a transição do menu
           window.setTimeout(() => {
-            mapRef.current?.invalidateSize();
+            mapClassRef.current?.invalidateSize();
           }, 250);
         }}
       />
@@ -157,9 +157,14 @@ export default function MapPage() {
       {/* Painel de rota */}
       <RoutePanel
         isOpen={isRoutePanelOpen}
-        routeMinutes={routeMinutes}
-        onMeuLocalSearch={handleSidebarMeuLocal}
-        onDestinoSearch={handleSidebarDestino}
+        routeDistance={routeDistance}
+        routeMinutes={routeDuration ? Math.round(secToMin(routeDuration)) : null}
+        arrivalTime={routeDuration ? addSecondsToCurrentTime(routeDuration) : null}
+        origin={userCoord}
+        destination={destination}
+        getSuggestions={getTopSuggestions}
+        onOriginSearch={handleSidebarMeuLocal}
+        onDestinationSearch={findDestination}
       />
 
       {/* Barra de pesquisa topo (some quando o RoutePanel estiver aberto) */}
@@ -170,7 +175,7 @@ export default function MapPage() {
             onSearch={handleSearch}
             getSuggestions={getTopSuggestions}
             showRouteIcon
-            onRouteClick={toggleRoutePanel}
+            onRouteClick={openRoutePanel}
           />
         </div>
       )}

@@ -8,12 +8,7 @@ function Header() {
       {/* Logo do sistema */}
       <div>
         <HashLink to="/" aria-label="Ir para a página inicial">
-          <img
-            src={LocalizadorImg}
-            alt="Logo Localizador"
-            width={170}
-            height={65}
-          />
+          <img src={LocalizadorImg} alt="Logo Localizador" width={170} height={65} />
         </HashLink>
       </div>
 
