@@ -49,7 +49,7 @@ const routeOptions: L.GeoJSONOptions = {
 };
 
 // numero maximo de marcadores, com excecao do de localizacao do usuario
-const MAX_MARKERS = 3;
+const MAX_MARKERS = 1;
 const DEFAULT_ZOOM = 19;
 const ROUTE_STEP_WEIGHT = 15; // metros "equivalentes" por step no cálculo de rotas"
 
@@ -85,6 +85,15 @@ export class Map {
     this.map.invalidateSize();
   }
 
+  public destroy(): void {
+    if (this._watchId) {
+      navigator.geolocation.clearWatch(this._watchId);
+      this._watchId = null;
+    }
+    this._userMarker = null;
+    this._userCoords = null;
+  }
+
   /**
    * Inicia o monitoramento da geolocalização do usuário.
    *
@@ -115,7 +124,6 @@ export class Map {
 
         if (this._userMarker) this._userMarker.setLatLng([coord.latitude, coord.longitude]);
         else {
-          // TODO: Mudar icone do marcador de usuario
           const marker = L.circleMarker([coord.latitude, coord.longitude], userMarkerOptions).bindTooltip("Você");
           marker.addTo(this.map);
           this.map.setView([coord.latitude, coord.longitude], DEFAULT_ZOOM, { animate: true });
@@ -165,18 +173,20 @@ export class Map {
    * @param waypoint - (Opcional) Coordenadas da porta do predio do destino
    * @returns Promise<void>
    */
-  public async drawRoute(origin: Coordinate_t, destination: Coordinate_t, waypoint: Coordinate_t | null = null): Promise<void> {
+  public async drawRoute(origin: Coordinate_t, destination: Coordinate_t, leftPadding: number = 0): Promise<void> {
     this.removeRoute();
 
-    const routeData = await this.getRoute(origin, destination, waypoint);
+    const routeData = await this.getRoute(origin, destination);
 
     if (routeData) {
       this._routeData = routeData;
       this._route = L.geoJSON(routeData.geometry, routeOptions).addTo(this.map);
+      this._route.bringToBack();
 
       const bounds = this._route.getBounds();
       this.map.fitBounds(bounds, {
-        padding: [50, 50],
+        paddingTopLeft: [50 + leftPadding, 50],
+        paddingBottomRight: [50, 50],
       });
     }
   }

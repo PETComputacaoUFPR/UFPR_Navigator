@@ -5,7 +5,7 @@ import { PiDotsThreeVerticalBold } from "react-icons/pi";
 import { LuMapPin } from "react-icons/lu";
 // import { GoHomeFill } from "react-icons/go";
 import { MdEditSquare } from "react-icons/md";
-import { FaPersonWalking } from "react-icons/fa6";
+import { FaPersonWalking, FaClock, FaFlag } from "react-icons/fa6";
 import type { Classroom_t, ClassroomWithAccess_t } from "@/classes/Classroom.ts";
 import { type Coordinate_t } from "@/classes/Place.ts";
 
@@ -23,8 +23,10 @@ export interface RoutePanelProps {
    * Quando null, deve renderizar "—"
    */
   routeMinutes: number | null;
+  routeDistance: number | null;
+  arrivalTime: string | null;
   destination: ClassroomWithAccess_t | null;
-  origin: Coordinate_t | null;
+  origin: Coordinate_t | ClassroomWithAccess_t | null;
 
   /**
    * Função opcional para fornecer sugestões em tempo real.
@@ -54,6 +56,8 @@ export interface RoutePanelProps {
 export default function RoutePanel({
   isOpen,
   routeMinutes,
+  routeDistance,
+  arrivalTime,
   destination,
   origin,
   getSuggestions,
@@ -80,7 +84,7 @@ export default function RoutePanel({
             showRouteIcon={false}
             onSearch={(v) => onOriginSearch(v)}
             getSuggestions={getSuggestions}
-            originCoord={origin}
+            origin={origin}
           />
 
           <SearchBar
@@ -101,7 +105,19 @@ export default function RoutePanel({
         <div className={styles.line}>
           <FaPersonWalking size={24} />
           <p>
+            <strong>{routeDistance !== null ? `${routeDistance} m` : "—"}</strong>
+          </p>
+        </div>
+        <div className={styles.line}>
+          <FaClock size={24} />
+          <p>
             <strong>{routeMinutes !== null ? `${routeMinutes} min` : "—"}</strong>
+          </p>
+        </div>
+        <div className={styles.line}>
+          <FaFlag size={24} />
+          <p>
+            <strong>Chegada às {arrivalTime !== null ? `${arrivalTime}` : "—"}</strong>
           </p>
         </div>
       </div>

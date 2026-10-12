@@ -28,7 +28,7 @@ interface SearchBarProps {
    */
   onRouteClick?: () => void;
 
-  originCoord?: Coordinate_t | null;
+  origin?: Classroom_t | Coordinate_t | null;
 }
 
 /**
@@ -47,9 +47,9 @@ export default function SearchBar({
   getSuggestions,
   showRouteIcon = false,
   onRouteClick,
-  originCoord,
+  origin,
 }: SearchBarProps) {
-  const offset = originCoord ? 1 : 0;
+  const offset = origin ? 1 : 0;
   const [value, setValue] = useState("");
   const [open, setOpen] = useState(false);
   // Indice selecionado na lista de sugestoes
@@ -110,10 +110,10 @@ export default function SearchBar({
     const totalSuggestions = suggestions.length + offset;
     if (e.key == "Enter") {
       if (selectedIndex != -1) {
-        if (originCoord && selectedIndex == 0) {
-          selectSuggestion(originCoord);
+        if (origin && selectedIndex == 0) {
+          selectSuggestion(origin);
         } else {
-          selectSuggestion(suggestions[selectedIndex]);
+          selectSuggestion(suggestions[selectedIndex - offset]);
         }
       } else {
         doSearch();
@@ -176,9 +176,9 @@ export default function SearchBar({
         )}
       </div>
 
-      {getSuggestions && open && (suggestions.length > 0 || originCoord) && (
+      {getSuggestions && open && (suggestions.length > 0 || origin) && (
         <div className={styles.suggestions} role="listbox">
-          {originCoord && (
+          {origin && (
             <button
               key={0}
               type="button"
@@ -188,10 +188,10 @@ export default function SearchBar({
               // Eventos para sincronizar mouse/teclado (substitui hover)
               onMouseEnter={() => setSelectedIndex(0)}
               onMouseLeave={() => setSelectedIndex(-1)}
-              onClick={() => selectSuggestion(originCoord)}
+              onClick={() => selectSuggestion(origin)}
               role="option"
             >
-              "Meu Local"
+              Meu Local
             </button>
           )}
           {suggestions.map((suggestion, index) => (
