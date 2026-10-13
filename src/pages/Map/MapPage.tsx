@@ -52,7 +52,7 @@ export default function MapPage() {
       alert("Sala não encontrada.");
       return null;
     }
-    mapClassRef.current?.addMarker(classroom.coordinate, classroom.name);
+    mapClassRef.current?.addDestinationMarker(classroom.coordinate, classroom.name);
     setDestination(classroom);
 
     return classroom;
@@ -64,7 +64,7 @@ export default function MapPage() {
       alert("Sala não encontrada.");
       return;
     }
-    mapClassRef.current?.addMarker(classroom.coordinate, classroom.name);
+    mapClassRef.current?.addOriginMarker(classroom.coordinate, classroom.name);
     setOrigin(classroom);
   }
 
@@ -99,14 +99,10 @@ export default function MapPage() {
     return Classroom.getSuggestions(query, 8);
   }
 
-  /**
-   * Nesta etapa: placeholder (implementar geolocalização).
-   */
   function handleSidebarMeuLocal(term: string | Coordinate_t): void {
     if (typeof term == "string") {
       findOrigin(term);
     } else {
-      mapClassRef.current?.addMarker(term);
       setOrigin(term);
     }
   }

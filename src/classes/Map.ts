@@ -27,7 +27,7 @@ interface OSRMResponse {
 }
 // ===========
 
-const markerOptions: L.TooltipOptions = {
+const markerLabelOptions: L.TooltipOptions = {
   permanent: true,
   direction: "top",
   offset: [-15, -5],
@@ -41,6 +41,13 @@ const userMarkerOptions: L.CircleMarkerOptions = {
   fillOpacity: 1,
 };
 
+const originMarkerOptions: L.CircleMarkerOptions = {
+  ...userMarkerOptions,
+  radius: 7,
+  fillColor: "#FFFFFF",
+  color: "#2f2930ff",
+};
+
 const routeOptions: L.GeoJSONOptions = {
   style: {
     color: "#007EA7",
@@ -49,17 +56,18 @@ const routeOptions: L.GeoJSONOptions = {
 };
 
 // numero maximo de marcadores, com excecao do de localizacao do usuario
-const MAX_MARKERS = 1;
+// const MAX_MARKERS = 2;
 const DEFAULT_ZOOM = 19;
 const ROUTE_STEP_WEIGHT = 15; // metros "equivalentes" por step no cálculo de rotas"
 
 export class Map {
   private map: L.Map;
+  private _originMarker: L.CircleMarker | null = null;
+  private _destinationMarker: L.Marker | null = null;
   private _userMarker: L.CircleMarker | null = null;
   private _userCoords: Coordinate_t | null = null;
   private _route: L.GeoJSON | null = null;
   private _routeData: Route | null = null;
-  private _markers: L.Marker[] = [];
   private _watchId: number | null = null;
 
   constructor(map: L.Map) {
@@ -135,28 +143,34 @@ export class Map {
     );
   }
 
+  public addOriginMarker(coord: Coordinate_t, label: string = ""): L.CircleMarker {
+    this.removeOriginMarker();
+    const marker = L.circleMarker([coord.latitude, coord.longitude], originMarkerOptions).bindTooltip(label);
+    marker.addTo(this.map);
+
+    this._originMarker = marker;
+
+    return marker;
+  }
+
   /**
    * Adiciona um marcador ao mapa.
    *
    * O marcador é adicionado na posição (`lat`, `lng`) com uma legenda opcional `label`.
-   * O mapa também é centralizado nessa posição. Se o número máximo de
-   * marcadores (`MAX_MARKERS`) for ultrapassado, o marcador mais antigo é removido.
+   * O mapa também é centralizado nessa posição. Remove o marcador antigo e adiciona o novo
    *
    * @param lat - Latitude do marcador
    * @param lng - Longitude do marcador
    * @param label - Texto exibido na legenda do marcador (opcional)
    * @returns O marcador (`L.Marker`) adicionado
    */
-  public addMarker(coord: Coordinate_t, label: string = ""): L.Marker {
-    const marker = L.marker([coord.latitude, coord.longitude]).bindTooltip(label, markerOptions);
+  public addDestinationMarker(coord: Coordinate_t, label: string = ""): L.Marker {
+    this.removeDestinationMarker();
+    const marker = L.marker([coord.latitude, coord.longitude]).bindTooltip(label, markerLabelOptions);
     marker.addTo(this.map);
     // this.map.setView([lat, lng], DEFAULT_ZOOM, { animate: true });
 
-    this._markers.push(marker);
-
-    if (this._markers.length > MAX_MARKERS) {
-      this.removeMarker();
-    }
+    this._destinationMarker = marker;
 
     return marker;
   }
@@ -191,10 +205,17 @@ export class Map {
     }
   }
 
-  private removeMarker(): void {
-    if (this._markers.length > 0) {
-      this.map.removeLayer(this._markers[0]);
-      this._markers.shift();
+  private removeOriginMarker(): void {
+    if (this._originMarker) {
+      this.map.removeLayer(this._originMarker);
+      this._originMarker = null;
+    }
+  }
+
+  private removeDestinationMarker(): void {
+    if (this._destinationMarker) {
+      this.map.removeLayer(this._destinationMarker);
+      this._destinationMarker = null;
     }
   }
 
