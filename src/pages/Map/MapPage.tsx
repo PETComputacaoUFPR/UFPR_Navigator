@@ -27,6 +27,30 @@ export default function MapPage() {
   const [destination, setDestination] = useState<ClassroomWithAccess_t | null>(null);
   const [routeDistance, setRouteDistance] = useState<number | null>(null);
   const [routeDuration, setRouteDuration] = useState<number | null>(null);
+  const [, setCurrentTime] = useState(() => Date.now());
+
+  // re-renderiza a página a cada troca de minuto para atualizar o tempo de chegada ao destino;
+  useEffect(() => {
+    const updateTime = () => setCurrentTime(Date.now());
+
+    const now = new Date();
+    const msUntilNextMinute = (60 - now.getSeconds()) * 1000 - now.getMilliseconds();
+
+    let interval: number | undefined;
+
+    const timeout = window.setTimeout(() => {
+      updateTime();
+      interval = window.setInterval(updateTime, 60_000);
+    }, msUntilNextMinute);
+
+    return () => {
+      window.clearTimeout(timeout);
+
+      if (interval !== undefined) {
+        window.clearInterval(interval);
+      }
+    };
+  }, []);
 
   const handleMapReady = useCallback((leafletMap: L.Map) => {
     mapClassRef.current?.destroy();
