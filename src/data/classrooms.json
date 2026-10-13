@@ -48,7 +48,7 @@
     { "id": 46, "name": "AUDITÓRIO ADM", "coordinate": { "latitude": -25.450552, "longitude": -49.232492 }, "building_id": 4, "floor": 1 },
     { "id": 47, "name": "SALÃO NOBRE TC", "coordinate": { "latitude": -25.45066, "longitude": -49.232232 }, "building_id": 4, "floor": 2 },
     { "id": 48, "name": "AUDITÓRIO DINF", "coordinate": { "latitude": -25.450793, "longitude": -49.231894 }, "building_id": 6, "floor": 0 },
-    { "id": 49, "name": "PET Computação", "coordinate": { "latitude": -25.450519, "longitude": -29.231644 }, "building_id": 6, "floor": 0 },
+    { "id": 49, "name": "PET Computação", "coordinate": { "latitude": -25.450519, "longitude": -49.231644 }, "building_id": 6, "floor": 0 },
     { "id": 50, "name": "LAB. 12 DINF", "coordinate": { "latitude": -25.450692, "longitude": -49.231851 }, "building_id": 6, "floor": 0 },
     { "id": 51, "name": "LAB. 3 DINF", "coordinate": { "latitude": -25.450672, "longitude": -49.231822 }, "building_id": 6, "floor": 0 },
     { "id": 52, "name": "LAB. 4 DINF", "coordinate": { "latitude": -25.450672, "longitude": -49.231822 }, "building_id": 6, "floor": 0 },
