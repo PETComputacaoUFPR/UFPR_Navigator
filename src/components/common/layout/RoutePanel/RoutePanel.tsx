@@ -8,6 +8,7 @@ import { MdEditSquare } from "react-icons/md";
 import { FaPersonWalking, FaClock, FaFlag } from "react-icons/fa6";
 import type { Classroom_t, ClassroomWithAccess_t } from "@/classes/Classroom.ts";
 import { type Coordinate_t } from "@/classes/Place.ts";
+import { addSecondsToCurrentTime, secToMin } from "@/utils/timeUtils";
 
 /**
  * Propriedades do painel lateral de rotas
@@ -22,9 +23,8 @@ export interface RoutePanelProps {
    * Tempo estimado (minutos) da rota atual.
    * Quando null, deve renderizar "—"
    */
-  routeMinutes: number | null;
+  routeDuration: number | null;
   routeDistance: number | null;
-  arrivalTime: string | null;
   destination: ClassroomWithAccess_t | null;
   origin: Coordinate_t | ClassroomWithAccess_t | null;
 
@@ -55,9 +55,8 @@ export interface RoutePanelProps {
  */
 export default function RoutePanel({
   isOpen,
-  routeMinutes,
+  routeDuration,
   routeDistance,
-  arrivalTime,
   destination,
   origin,
   getSuggestions,
@@ -105,19 +104,19 @@ export default function RoutePanel({
         <div className={styles.line}>
           <FaPersonWalking size={24} />
           <p>
-            <strong>{routeDistance !== null ? `${routeDistance} m` : "—"}</strong>
+            <strong>{routeDistance !== null ? `${Math.round(routeDistance)} m` : "—"}</strong>
           </p>
         </div>
         <div className={styles.line}>
           <FaClock size={24} />
           <p>
-            <strong>{routeMinutes !== null ? `${routeMinutes} min` : "—"}</strong>
+            <strong>{routeDuration !== null ? `${Math.round(secToMin(routeDuration))} min` : "—"}</strong>
           </p>
         </div>
         <div className={styles.line}>
           <FaFlag size={24} />
           <p>
-            <strong>Chegada às {arrivalTime !== null ? `${arrivalTime}` : "—"}</strong>
+            <strong>Chegada às {routeDuration !== null ? `${addSecondsToCurrentTime(routeDuration)}` : "—"}</strong>
           </p>
         </div>
       </div>

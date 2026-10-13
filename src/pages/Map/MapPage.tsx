@@ -9,7 +9,6 @@ import { Map } from "@/classes/Map";
 import { type Coordinate_t } from "@/classes/Place.ts";
 import { type Classroom_t, type ClassroomWithAccess_t, Classroom } from "@/classes/Classroom.ts";
 import { Building } from "@/classes/Building";
-import { addSecondsToCurrentTime, secToMin } from "@/utils/timeUtils";
 
 const MAP_CENTER: [number, number] = [-25.450223, -49.233239];
 const MAP_ZOOM = 16;
@@ -158,8 +157,7 @@ export default function MapPage() {
       <RoutePanel
         isOpen={isRoutePanelOpen}
         routeDistance={routeDistance}
-        routeMinutes={routeDuration ? Math.round(secToMin(routeDuration)) : null}
-        arrivalTime={routeDuration ? addSecondsToCurrentTime(routeDuration) : null}
+        routeDuration={routeDuration}
         origin={userCoord}
         destination={destination}
         getSuggestions={getTopSuggestions}
