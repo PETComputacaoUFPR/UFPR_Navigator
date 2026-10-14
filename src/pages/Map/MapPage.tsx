@@ -10,6 +10,7 @@ import { type Coordinate_t } from "@/classes/Place.ts";
 import { type Classroom_t, type ClassroomWithAccess_t, Classroom } from "@/classes/Classroom.ts";
 import { Building } from "@/classes/Building";
 import { IndoorGraph } from "@/classes/IndoorGraph";
+import { Snackbar, type SnackbarData } from "@/components/common/Snackbar/Snackbar";
 
 const MAP_CENTER: [number, number] = [-25.450223, -49.233239];
 const MAP_ZOOM = 16;
@@ -29,6 +30,7 @@ export default function MapPage() {
   const [routeDistance, setRouteDistance] = useState<number | null>(null);
   const [routeDuration, setRouteDuration] = useState<number | null>(null);
   const [, setCurrentTime] = useState(() => Date.now());
+  const [snackbar, setSnackbar] = useState<SnackbarData | null>(null);
 
   // re-renderiza a página a cada troca de minuto para atualizar o tempo de chegada ao destino;
   useEffect(() => {
@@ -74,7 +76,11 @@ export default function MapPage() {
   function findDestination(termRaw: string): ClassroomWithAccess_t | null {
     const classroom = Classroom.find(termRaw);
     if (!classroom) {
-      alert("Sala não encontrada.");
+      setSnackbar({
+        title: "Destino não encontrado",
+        message: "Verifique o nome ou código da sala e tente novamente.",
+        type: "error",
+      });
       return null;
     }
 
@@ -87,7 +93,11 @@ export default function MapPage() {
   function findOrigin(termRaw: string): void {
     const classroom = Classroom.find(termRaw);
     if (!classroom) {
-      alert("Sala não encontrada.");
+      setSnackbar({
+        title: "Origem não encontrada",
+        message: "Verifique o nome ou código da sala e tente novamente.",
+        type: "error",
+      });
       return;
     }
     mapClassRef.current?.addOriginMarker(classroom.coordinate, classroom.name);
@@ -151,9 +161,9 @@ export default function MapPage() {
         setRouteDistance(mapClassRef.current?.routeDistance ?? null);
         setRouteDuration(mapClassRef.current?.routeDuration ?? null);
         mapClassRef.current?.removeStairsMarker();
-        if(destination.floor != 0) {
-          const stairs = await IndoorGraph.findNearestStair(destination.building_id, destinationEntrance)
-          if(stairs) mapClassRef.current?.addStairsMarker(stairs.coordinate);
+        if (destination.floor != 0) {
+          const stairs = await IndoorGraph.findNearestStair(destination.building_id, destinationEntrance);
+          if (stairs) mapClassRef.current?.addStairsMarker(stairs.coordinate);
         }
       }
     })();
@@ -204,6 +214,8 @@ export default function MapPage() {
           />
         </div>
       )}
+
+      {snackbar && <Snackbar title={snackbar.title} message={snackbar.message} type={snackbar.type} onClose={() => setSnackbar(null)} />}
     </div>
   );
 }

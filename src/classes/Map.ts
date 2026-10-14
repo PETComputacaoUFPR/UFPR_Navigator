@@ -179,7 +179,7 @@ export class Map {
 
   public addStairsMarker(coord: Coordinate_t): L.Marker {
     this.removeStairsMarker();
-    const marker = L.marker([coord.latitude, coord.longitude], {icon: createStairsIcon()});
+    const marker = L.marker([coord.latitude, coord.longitude], { icon: createStairsIcon() });
     marker.addTo(this.map);
 
     this._stairsMarker = marker;
@@ -216,7 +216,7 @@ export class Map {
       });
     }
   }
-  
+
   public removeStairsMarker(): void {
     if (this._stairsMarker) {
       this.map.removeLayer(this._stairsMarker);
@@ -237,7 +237,6 @@ export class Map {
       this._destinationMarker = null;
     }
   }
-
 
   private getBestRoute(routes: Route[]): Route {
     // adicionar steps no weight reduz obstáculos como atravessar rua, que não são levados em conta pelo OSRM
