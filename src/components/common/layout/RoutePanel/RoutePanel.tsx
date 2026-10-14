@@ -111,7 +111,10 @@ export default function RoutePanel({
           <div className={styles.line}>
             <FaStairs size={24} />
             <p>
-              <strong>{destination.floor > 0 ? "Suba" : "Desça"} {Math.abs(destination.floor)} {Math.abs(destination.floor) == 1 ? " andar" : "andares"}</strong>
+              <strong>
+                {destination.floor > 0 ? "Suba" : "Desça"} {Math.abs(destination.floor)}{" "}
+                {Math.abs(destination.floor) == 1 ? " andar" : "andares"}
+              </strong>
             </p>
           </div>
         )}
