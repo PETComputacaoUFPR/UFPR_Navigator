@@ -1,5 +1,6 @@
 import * as L from "leaflet";
 import { type Coordinate_t } from "./Place.ts";
+import { createStairsIcon } from "@/utils/mapIcons.tsx";
 
 // ===Tipos e interfaces para o formato de retorno do OSRM===
 type Geometry = {
@@ -64,6 +65,7 @@ export class Map {
   private map: L.Map;
   private _originMarker: L.CircleMarker | null = null;
   private _destinationMarker: L.Marker | null = null;
+  private _stairsMarker: L.Marker | null = null;
   private _userMarker: L.CircleMarker | null = null;
   private _userCoords: Coordinate_t | null = null;
   private _route: L.GeoJSON | null = null;
@@ -175,6 +177,16 @@ export class Map {
     return marker;
   }
 
+  public addStairsMarker(coord: Coordinate_t): L.Marker {
+    this.removeStairsMarker();
+    const marker = L.marker([coord.latitude, coord.longitude], {icon: createStairsIcon()});
+    marker.addTo(this.map);
+
+    this._stairsMarker = marker;
+
+    return marker;
+  }
+
   /**
    * Desenha uma rota no mapa entre o ponto de origem e o destino.
    *
@@ -204,6 +216,13 @@ export class Map {
       });
     }
   }
+  
+  public removeStairsMarker(): void {
+    if (this._stairsMarker) {
+      this.map.removeLayer(this._stairsMarker);
+      this._stairsMarker = null;
+    }
+  }
 
   private removeOriginMarker(): void {
     if (this._originMarker) {
@@ -218,6 +237,7 @@ export class Map {
       this._destinationMarker = null;
     }
   }
+
 
   private getBestRoute(routes: Route[]): Route {
     // adicionar steps no weight reduz obstáculos como atravessar rua, que não são levados em conta pelo OSRM

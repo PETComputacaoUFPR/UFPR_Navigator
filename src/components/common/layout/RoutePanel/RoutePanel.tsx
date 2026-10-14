@@ -5,7 +5,7 @@ import { PiDotsThreeVerticalBold } from "react-icons/pi";
 import { LuMapPin } from "react-icons/lu";
 // import { GoHomeFill } from "react-icons/go";
 import { MdEditSquare } from "react-icons/md";
-import { FaPersonWalking, FaClock, FaFlag } from "react-icons/fa6";
+import { FaPersonWalking, FaClock, FaFlag, FaStairs } from "react-icons/fa6";
 import type { Classroom_t, ClassroomWithAccess_t } from "@/classes/Classroom.ts";
 import { type Coordinate_t } from "@/classes/Place.ts";
 import { addSecondsToCurrentTime, secToMin } from "@/utils/timeUtils";
@@ -79,7 +79,7 @@ export default function RoutePanel({
             width="100%"
             height="50px"
             background="#007EA7"
-            placeholder="Meu Local"
+            placeholder="Origem"
             showRouteIcon={false}
             onSearch={(v) => onOriginSearch(v)}
             getSuggestions={getSuggestions}
@@ -107,6 +107,14 @@ export default function RoutePanel({
             <strong>{routeDistance !== null ? `${Math.round(routeDistance)} m` : "—"}</strong>
           </p>
         </div>
+        {destination?.floor !== 0 && destination?.floor != null && (
+          <div className={styles.line}>
+            <FaStairs size={24} />
+            <p>
+              <strong>{destination.floor > 0 ? "Suba" : "Desça"} {Math.abs(destination.floor)} {Math.abs(destination.floor) == 1 ? " andar" : "andares"}</strong>
+            </p>
+          </div>
+        )}
         <div className={styles.line}>
           <FaClock size={24} />
           <p>

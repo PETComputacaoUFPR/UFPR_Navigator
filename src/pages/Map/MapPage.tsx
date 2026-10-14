@@ -9,6 +9,7 @@ import { Map } from "@/classes/Map";
 import { type Coordinate_t } from "@/classes/Place.ts";
 import { type Classroom_t, type ClassroomWithAccess_t, Classroom } from "@/classes/Classroom.ts";
 import { Building } from "@/classes/Building";
+import { IndoorGraph } from "@/classes/IndoorGraph";
 
 const MAP_CENTER: [number, number] = [-25.450223, -49.233239];
 const MAP_ZOOM = 16;
@@ -76,6 +77,7 @@ export default function MapPage() {
       alert("Sala não encontrada.");
       return null;
     }
+
     mapClassRef.current?.addDestinationMarker(classroom.coordinate, classroom.name);
     setDestination(classroom);
 
@@ -148,6 +150,11 @@ export default function MapPage() {
         await mapClassRef.current?.drawRoute(originEntrance, destinationEntrance, leftPadding);
         setRouteDistance(mapClassRef.current?.routeDistance ?? null);
         setRouteDuration(mapClassRef.current?.routeDuration ?? null);
+        mapClassRef.current?.removeStairsMarker();
+        if(destination.floor != 0) {
+          const stairs = await IndoorGraph.findNearestStair(destination.building_id, destinationEntrance)
+          if(stairs) mapClassRef.current?.addStairsMarker(stairs.coordinate);
+        }
       }
     })();
   }, [origin, destination, leftPadding]);
