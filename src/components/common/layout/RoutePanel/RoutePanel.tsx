@@ -37,14 +37,14 @@ export interface RoutePanelProps {
   /**
    * Ação do campo "Meu Local"
    */
-  onOriginSearch: (term: string | Coordinate_t) => void;
+  onOriginSearch: (term: string | Coordinate_t) => Coordinate_t | ClassroomWithAccess_t | null;
 
   /**
    * Ação do campo "Local Destino"
    *
    * @param {string} term Termo digitado.
    */
-  onDestinationSearch: (term: string) => ClassroomWithAccess_t | null;
+  onDestinationSearch: (term: string) => ClassroomWithAccess_t | Coordinate_t | null;
 }
 
 /**
@@ -81,7 +81,9 @@ export default function RoutePanel({
             background="#007EA7"
             placeholder="Origem"
             showRouteIcon={false}
-            onSearch={(v) => onOriginSearch(v)}
+            onSearch={(v) => {
+              return onOriginSearch(v);
+            }}
             getSuggestions={getSuggestions}
             origin={origin}
           />
@@ -93,7 +95,8 @@ export default function RoutePanel({
             placeholder={destination ? destination.name : "Local Destino"}
             showRouteIcon={false}
             onSearch={(v) => {
-              if (typeof v == "string") onDestinationSearch(v);
+              if (typeof v == "string") return onDestinationSearch(v);
+              return null;
             }}
             {...(getSuggestions && { getSuggestions: getSuggestions })}
           />

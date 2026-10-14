@@ -90,7 +90,7 @@ export default function MapPage() {
     return classroom;
   }
 
-  function findOrigin(termRaw: string): void {
+  function findOrigin(termRaw: string): ClassroomWithAccess_t | null {
     const classroom = Classroom.find(termRaw);
     if (!classroom) {
       setSnackbar({
@@ -98,10 +98,12 @@ export default function MapPage() {
         message: "Verifique o nome ou código da sala e tente novamente.",
         type: "error",
       });
-      return;
+      return null;
     }
     mapClassRef.current?.addOriginMarker(classroom.coordinate, classroom.name);
     setOrigin(classroom);
+
+    return classroom;
   }
 
   function openRoutePanel(): void {
@@ -118,11 +120,13 @@ export default function MapPage() {
    * @returns {void}
    */
 
-  function handleSearch(termRaw: string | Coordinate_t): void {
-    if (typeof termRaw != "string") return;
+  function handleSearch(termRaw: string | Coordinate_t): ClassroomWithAccess_t | null {
+    if (typeof termRaw != "string") return null;
     const classroom = findDestination(termRaw);
-    if (!classroom) return;
+    if (!classroom) return null;
     openRoutePanel();
+
+    return classroom;
   }
 
   /**
@@ -135,12 +139,13 @@ export default function MapPage() {
     return Classroom.getSuggestions(query, 8);
   }
 
-  function handleSidebarMeuLocal(term: string | Coordinate_t): void {
+  function handleSidebarMeuLocal(term: string | Coordinate_t): Coordinate_t | ClassroomWithAccess_t | null {
     if (typeof term == "string") {
-      findOrigin(term);
-    } else {
-      setOrigin(term);
+      return findOrigin(term);
     }
+
+    setOrigin(term);
+    return term;
   }
 
   useEffect(() => {

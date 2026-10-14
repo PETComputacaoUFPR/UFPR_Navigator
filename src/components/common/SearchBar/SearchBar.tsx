@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { IoMdSearch } from "react-icons/io";
 import { LuMapPin } from "react-icons/lu";
-import { type Classroom_t } from "@/classes/Classroom.ts";
+import { type Classroom_t, type ClassroomWithAccess_t } from "@/classes/Classroom.ts";
 import { type Coordinate_t } from "@/classes/Place.ts";
 import styles from "./SearchBar.module.css";
 
 interface SearchBarProps {
   placeholder?: string;
-  onSearch?: (value: string | Coordinate_t) => void;
+  onSearch?: (value: string | Coordinate_t) => Coordinate_t | ClassroomWithAccess_t | null;
   width?: string;
   height?: string;
   background?: string;
@@ -76,7 +76,7 @@ export default function SearchBar({
   function doSearch(): void {
     const term = value.trim();
     if (!term) return;
-    onSearch?.(term);
+    if (!onSearch?.(term)) setValue("");
     setOpen(false);
   }
 
