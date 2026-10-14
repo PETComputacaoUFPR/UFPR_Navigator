@@ -6,8 +6,8 @@ export function createStairsIcon(): L.DivIcon {
   const html = renderToStaticMarkup(
     <div
       style={{
-        width: 32,
-        height: 32,
+        width: 28,
+        height: 28,
         borderRadius: "50%",
         background: "#fff",
         display: "flex",
@@ -16,7 +16,7 @@ export function createStairsIcon(): L.DivIcon {
         boxShadow: "0 1px 4px rgba(0, 0, 0, 0.45)",
       }}
     >
-      <FaStairs size={18} color="#007EA7" />
+      <FaStairs size={20} color="#007EA7" />
     </div>,
   );
 

@@ -26,9 +26,8 @@ export class IndoorGraph {
 
     const code = building.code.toLowerCase();
     try {
-      const data = (await import(`../data/graphs/${code}.json`, { with: { type: "json" } })) as { default: Graph_t };
+      const data = await import(`../data/graphs/${code}.json`);
       IndoorGraph._cache.set(buildingId, data.default);
-
       return data.default;
     } catch {
       return null;
