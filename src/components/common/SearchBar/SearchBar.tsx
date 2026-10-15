@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { IoMdSearch } from "react-icons/io";
 import { LuMapPin } from "react-icons/lu";
 import { type Classroom_t, type ClassroomWithAccess_t } from "@/classes/Classroom.ts";
@@ -29,6 +29,7 @@ interface SearchBarProps {
   onRouteClick?: () => void;
 
   origin?: Classroom_t | Coordinate_t | null;
+  label:string;
 }
 
 /**
@@ -48,6 +49,7 @@ export default function SearchBar({
   showRouteIcon = false,
   onRouteClick,
   origin,
+  label,
 }: SearchBarProps) {
   const offset = origin ? 1 : 0;
   const [value, setValue] = useState("");
@@ -55,6 +57,7 @@ export default function SearchBar({
   // Indice selecionado na lista de sugestoes
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const rootRef = useRef<HTMLDivElement | null>(null);
+  const id = useId();
 
   const suggestions = useMemo(() => {
     if (!getSuggestions) return [];
@@ -152,17 +155,18 @@ export default function SearchBar({
     <div ref={rootRef} className={styles.root} style={{ width }}>
       <div className={styles.container} style={{ height, background }} role="search">
         <input
+          id={id}
           className={styles.input}
           type="text"
           value={value}
           placeholder={placeholder}
+          aria-label={label} /* Opção para acessibilidade */
           onChange={(e) => {
             setValue(e.target.value);
             setOpen(true);
           }}
           onFocus={() => setOpen(true)}
           onKeyDown={handleKeyDown}
-          aria-label="Pesquisar"
         />
 
         <button className={styles.iconButton} onClick={doSearch} aria-label="Buscar">

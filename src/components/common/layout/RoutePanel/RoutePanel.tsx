@@ -86,6 +86,7 @@ export default function RoutePanel({
             }}
             getSuggestions={getSuggestions}
             origin={origin}
+            label="Selecionar ponto de origem"
           />
 
           <SearchBar
@@ -99,6 +100,7 @@ export default function RoutePanel({
               return null;
             }}
             {...(getSuggestions && { getSuggestions: getSuggestions })}
+            label="Selecionar ponto de destino"
           />
         </div>
       </div>

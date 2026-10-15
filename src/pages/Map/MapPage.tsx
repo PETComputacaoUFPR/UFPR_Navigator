@@ -216,6 +216,7 @@ export default function MapPage() {
             getSuggestions={getTopSuggestions}
             showRouteIcon
             onRouteClick={openRoutePanel}
+            label="Selecionar ponto de destino"
           />
         </div>
       )}
