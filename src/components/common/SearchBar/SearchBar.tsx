@@ -128,10 +128,12 @@ export default function SearchBar({
 
     //  Como depende do estado anterior, utiliza o prev para garantir mais seguranca
     if (e.key == "ArrowDown") {
+      e.preventDefault(); // evita mover o cursor para o inicio ou final do input
       setSelectedIndex((prev) => (prev + 1) % totalSuggestions);
     }
 
     if (e.key == "ArrowUp") {
+      e.preventDefault(); // evita mover o cursor para o inicio ou final do input
       setSelectedIndex((prev) => {
         // previne que vá para o antepenúltimo elemento da lista quando selectedIndex é inicializado
         const decrement = prev != -1 ? 1 : 0;
@@ -158,6 +160,7 @@ export default function SearchBar({
           id={id}
           className={styles.input}
           type="text"
+          autoComplete="off"
           value={value}
           placeholder={placeholder}
           aria-label={label} /* Opção para acessibilidade */
@@ -181,7 +184,7 @@ export default function SearchBar({
       </div>
 
       {getSuggestions && open && (suggestions.length > 0 || origin) && (
-        <div className={styles.suggestions} role="listbox">
+        <div className={styles.suggestions} style={{ background }} role="listbox">
           {origin && (
             <button
               key={0}

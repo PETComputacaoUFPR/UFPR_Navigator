@@ -2,7 +2,7 @@ import { HashLink } from "react-router-hash-link";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoClose } from "react-icons/io5";
 import styles from "./MapSideMenu.module.css";
-import LocalizadorImg from "@/assets/localizador_img.png";
+import NavigatorImg from "@/assets/ufpr_navigator.png";
 import PetImg from "@/assets/pet_img.png";
 
 /**
@@ -47,7 +47,7 @@ export default function MapSideMenu({ isOpen, onToggle, showFooterLogo = true }:
       {isOpen && (
         <div className={styles.content}>
           <div className={styles.brand}>
-            <img src={LocalizadorImg} alt="Localizador de Salas" width={170} height={65} />
+            <img src={NavigatorImg} alt="UFPR Navigator" width={170} height={85} />
           </div>
 
           <nav className={styles.nav} aria-label="Navegação">

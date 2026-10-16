@@ -1,6 +1,6 @@
 import { HashLink } from "react-router-hash-link";
 import styles from "./Header.module.css";
-import LocalizadorImg from "@/assets/localizador_img.png";
+import NavigatorImg from "@/assets/ufpr_navigator.png";
 
 function Header() {
   return (
@@ -8,7 +8,7 @@ function Header() {
       {/* Logo do sistema */}
       <div>
         <HashLink to="/" aria-label="Ir para a página inicial">
-          <img src={LocalizadorImg} alt="Logo Localizador" width={170} height={65} />
+          <img src={NavigatorImg} alt="Logo navigator" width={170} height={85} />
         </HashLink>
       </div>
 

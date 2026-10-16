@@ -1,5 +1,5 @@
 import styles from "./Footer.module.css";
-import LocalizadorImg from "@/assets/localizador_img.png";
+import NavigatorImg from "@/assets/ufpr_navigator.png";
 import PetImg from "@/assets/pet_img.png";
 import { FaInstagram } from "react-icons/fa6";
 import { TbWorldWww } from "react-icons/tb";
@@ -13,7 +13,7 @@ function Footer() {
     <footer className={styles.footer}>
       {/* Logo do sistema */}
       <div>
-        <img src={LocalizadorImg} alt="Logo Localizador" width={170} height={65} />
+        <img src={NavigatorImg} alt="Logo Localizador" width={170} height={85} />
       </div>
 
       {/* Área de redes sociais e site */}
