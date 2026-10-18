@@ -65,7 +65,7 @@ export default function MapSideMenu({ isOpen, onToggle, showFooterLogo = true }:
           {showFooterLogo && (
             <div className={styles.footer}>
               <div className={styles.footerPlaceholder}>
-                <img src={PetImg} alt="Logo PET Computação" width={180} height={67} />
+                <img src={PetImg} alt="Logo PET Computação" width={180} height={67} draggable={false}/>
               </div>
             </div>
           )}

@@ -11,7 +11,7 @@ interface DevCardProps {
 function DevCard({ name, role, website, image }: DevCardProps) {
   return (
     <div className={styles.card}>
-      <img src={image ?? DefaultImg} alt={`Foto de ${name}`} className={styles.avatar} />
+      <img src={image ?? DefaultImg} alt={`Foto de ${name}`} className={styles.avatar} draggable={false} />
 
       <div className={styles.info}>
         <div className={styles.text}>

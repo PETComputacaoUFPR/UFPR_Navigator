@@ -13,7 +13,7 @@ function Footer() {
     <footer className={styles.footer}>
       {/* Logo do sistema */}
       <div>
-        <img src={NavigatorImg} alt="Logo Localizador" width={170} height={85} />
+        <img src={NavigatorImg} alt="Logo Localizador" width={170} height={85} draggable={false}/>
       </div>
 
       {/* Área de redes sociais e site */}
@@ -35,7 +35,7 @@ function Footer() {
 
       {/* Logo institucional */}
       <div>
-        <img src={PetImg} alt="Logo PET Computação" width={180} height={67} />
+        <img src={PetImg} alt="Logo PET Computação" width={180} height={67} draggable={false}/>
       </div>
     </footer>
   );

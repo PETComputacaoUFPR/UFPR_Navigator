@@ -14,7 +14,7 @@ function Feature({ title, icon, text, color, iconWidth, iconHeight }: FeaturePro
     <div key={title}>
       <div className={styles.item} style={{ backgroundColor: color }}>
         {" "}
-        <img src={icon} alt={`${title}_icon`} className={styles.icon} width={iconWidth} height={iconHeight} />
+        <img src={icon} alt={`${title}_icon`} className={styles.icon} width={iconWidth} height={iconHeight} draggable={false} />
       </div>
       <h3 className={styles.title}>{title}</h3>
       <p className={styles.text}>{text}</p>
