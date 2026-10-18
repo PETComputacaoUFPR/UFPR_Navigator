@@ -1,0 +1,22 @@
+.item {
+  width: 122px;
+  height: 122px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: #4f1756;
+}
+
+.title {
+  color: #b8207c;
+  margin-bottom: 12px;
+}
+
+.text {
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  text-wrap: balance;
+}

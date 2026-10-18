@@ -29,7 +29,7 @@ interface SearchBarProps {
   onRouteClick?: () => void;
 
   origin?: Classroom_t | Coordinate_t | null;
-  label:string;
+  label: string;
 }
 
 /**
