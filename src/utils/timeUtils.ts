@@ -33,8 +33,12 @@ export function addSecondsToCurrentTime(seconds: number): string {
 
   now.setSeconds(now.getSeconds() + seconds);
 
+  if (now.getSeconds() > 0) {
+    now.setMinutes(now.getMinutes() + 1);
+  }
+
   const hour: number = now.getHours();
-  const minute: number = Math.ceil(now.getMinutes());
+  const minute: number = now.getMinutes();
 
   if (minute < 10) return hour + ":" + "0" + minute;
   return hour + ":" + minute;
