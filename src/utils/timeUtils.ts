@@ -31,11 +31,7 @@ export function formatDuration(seconds: number): string {
 export function addSecondsToCurrentTime(seconds: number): string {
   const now: Date = new Date();
 
-  now.setSeconds(now.getSeconds() + seconds);
-
-  if (now.getSeconds() > 0) {
-    now.setMinutes(now.getMinutes() + 1);
-  }
+  now.setMinutes(now.getMinutes() + secToMin(seconds));
 
   const hour: number = now.getHours();
   const minute: number = now.getMinutes();
