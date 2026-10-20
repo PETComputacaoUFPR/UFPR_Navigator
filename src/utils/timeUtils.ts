@@ -31,10 +31,10 @@ export function formatDuration(seconds: number): string {
 export function addSecondsToCurrentTime(seconds: number): string {
   const now: Date = new Date();
 
-  now.setSeconds(now.getSeconds() + seconds);
+  now.setMinutes(now.getMinutes() + secToMin(seconds));
 
   const hour: number = now.getHours();
-  const minute: number = Math.ceil(now.getMinutes());
+  const minute: number = now.getMinutes();
 
   if (minute < 10) return hour + ":" + "0" + minute;
   return hour + ":" + minute;
